@@ -1,0 +1,282 @@
+{% extends "app/base.html" %}
+{% load static %}
+
+{% block titulo %}
+
+Registro
+
+{% endblock %}
+
+{% block contenido %}
+<div class="wrapper row2 bgded" style="background-image:url('{% static 'images/demo/backgrounds/background.jpg' %}');">
+  <div class="overlay">
+    <div id="breadcrumb" class="clear">
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Login</a></li>
+        <li><a href="#">Services</a></li>
+        <li><a href="#">Registro</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="wrapper row3">
+  <main class="container clear">
+
+    <style>
+      .wrapper.row3 {
+        background-color: #f2f2f2;
+      }
+
+      .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 15px;
+
+        /* Espacio entre filas */
+      }
+
+      .form-group {
+        flex: 1;
+        /* Toma el mismo espacio */
+        justify-content: center;
+        /* Centra horizontalmente */
+        align-items: center;
+        /* Centra verticalmente */
+        min-width: 200px;
+        /* Ancho mínimo para cada columna */
+        margin-right: 5px;
+        /* Espacio entre columnas */
+      }
+
+      .form-group:last-child {
+        margin-right: 0;
+        /* Elimina el margen derecho en el último elemento */
+      }
+
+      /* Nueva clase para centrar elementos */
+      .form-group-center {
+        justify-content: center;
+        /* Centra horizontalmente */
+        align-items: center;
+        /* Centra verticalmente */
+        min-width: 200px;
+        /* Ancho mínimo para cada columna */
+        margin-right: 5px;
+        /* Espacio entre columnas */
+      }
+      .separar {
+        margin-right: 185px;
+      }
+      .button {
+        background: linear-gradient(140.14deg, #ec540e 15.05%, #d6361f 114.99%) padding-box,
+          linear-gradient(142.51deg, #ff9465 8.65%, #af1905 88.82%) border-box;
+        border-radius: 7px;
+        border: 2px solid transparent;
+
+        text-shadow: 1px 1px 1px #00000040;
+        box-shadow: 8px 8px 20px 0px #45090059;
+
+        padding: 10px 40px;
+        line-height: 20px;
+        cursor: pointer;
+        transition: all 0.3s;
+        color: white;
+        font-size: 18px;
+        font-weight: 500;
+      }
+
+      .button:hover {
+        box-shadow: none;
+        opacity: 80%;
+      }
+    </style>
+    <form action="{% url 'registrar' %}" method="post">
+
+      {% csrf_token %}
+
+      <!-- Información personal -->
+      <h2>Información Personal <span> *</span></h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nombre">Nombres</label>
+          <input type="text" name="nombre" id="nombre" required size="22">
+        </div>
+        <div class="form-group">
+          <label for="apellido">Apellidos</label>
+          <input type="text" name="apellido" id="apellido" required size="22">
+        </div>
+        <div class="form-group">
+          <label for="cedula">Cédula</label>
+          <input type="text" name="cedula" id="cedula" required size="22">
+        </div>
+        <div class="form-group">
+          <label for="f_nacimiento">Fecha de nacimiento</label>
+          <input type="date" name="f_nacimiento" id="f_nacimiento" required>
+        </div>
+        <div class="form-group">
+          <label for="genero">Género</label>
+          <select name="genero" id="genero" class="form-control" required>
+            <option value="">Seleccione...</option>
+            <option value="masculino">Masculino</option>
+            <option value="femenino">Femenino</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Información académica -->
+      <h2>Información Académica <span> *</span></h2>
+      <div class="form-row">
+        <div class="form-group separar">
+         
+          <label for="carrera">Carrera</label>
+          <select name="carrera" id="carrera" class="form-control" required>
+            <option value="">Seleccione...</option>
+            <option value="agronomia animal">Agronomía mención Producción Animal</option>
+            <option value="agronomia vegetal">Agronomía mención Producción vegetal</option>
+            <option value="medicina veterinaria">Medicina Veterinaria</option>
+            <option value="medicina">Medicina</option>
+            <option value="enfermeria">Enfermería</option>
+            <option value="radiologia">Radiodiagnóstico</option>
+            <option value="odontologia">Odontología</option>
+            <option value="administracion comercial">Administración Comercial</option>
+            <option value="contaduria publica">Contaduría Pública</option>
+            <option value="economia">Economía</option>
+            <option value="comunicacion social">Comunicación Social</option>
+            <option value="derecho">Derecho</option>
+            <option value="ing informatica">Ingeniería Informática</option>
+            <option value="ing electronica">Ingeniería Electrónica</option>
+            <option value="ing civil">Ingeniería Civil</option>
+            <option value="ing Hidrocarburos (gas)"> Ingeniería en Hidrocarburos mención Gas</option>
+            <option value="ing Hidrocarburos (petroleo)"> Ingeniería en Hidrocarburos mención Petróleo</option>
+            <option value="ing Industrial">Ingeniería Industrial</option>
+            <option value="educacion integral"> Educación Integral</option>
+            <option value="educacion mencion computacion">Educación Mención Computación</option>
+          </select>
+
+
+        </div>
+        <div class="form-group separar">
+
+          <label for="cede">Sede</label>
+          <select name="cede" id="cede" class="form-control" required>
+            <option value="">Seleccione...</option>
+            <option value="Centro Universitario de Maturín">Centro Universitario de Maturín</option>
+            <option value="Centro Universitario de Valle de la Pascua">Centro Universitario de Valle de la Pascua</option>
+            <option value="Centro Universitario de Zaraza">Centro Universitario de Zaraza</option>
+            <option value="Centro Universitario de Altagracia de Orituco">Centro Universitario de Altagracia de Orituco</option>
+            <option value="Centro Universitario de Calabozo">Centro Universitario de Calabozo</option>
+            <option value="Centro Universitario de Ortiz">Centro Universitario de Ortiz</option>
+            <option value="Centro Universitario de El Sombrero">Centro Universitario de El Sombrero</option>
+            <option value="Centro Universitario de Mapire">Centro Universitario de Mapire</option>
+            <option value="Centro Universitario de San Juan de los Morros">Centro Universitario de San Juan de los Morros</option>
+          </select>
+
+        </div>
+
+        <div class="form-group separar">
+          <label for="cursando">semestre | año cursando</label>
+          <select name="cursando" id="cursando" class="form-control">
+            <option value="">Seleccione ...</option>
+            <option value="semestre 1">1er Semestre</option>
+            <option value="semestre 2">2do Semestre</option>
+            <option value="semestre 3">3er Semestre</option>
+            <option value="semestre 4">4to Semestre</option>
+            <option value="semestre 5">5to Semestre</option>
+            <option value="semestre 6">6to Semestre</option>
+            <option value="semestre 7">7mo Semestre</option>
+            <option value="semestre 8">8vo Semestre</option>
+            <option value="semestre 9">9no Semestre</option>
+            <option value="semestre 10">10mo Semestre</option>
+            <option value="">-----------------</option>
+            <option value="año 1">1er año</option>
+            <option value="año 2">2do año</option>
+            <option value="año 3">3er año</option>
+            <option value="año 4">4to año</option>
+            <option value="año 5">5to año</option>
+            <option value="año 6">6to año</option>
+
+          </select>
+        </div>
+      </div>
+
+      <!-- Información de contacto -->
+      <h2>Información de Contacto <span> *</span></h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="ubicacion">Dirección</label>
+          <input type="text" name="ubicacion" id="ubicacion" required size="22">
+        </div>
+        <div class="form-group">
+          <label for="email">Correo</label>
+          <input type="email" name="email" id="email" required size="22">
+        </div>
+        <div class="form-group">
+          <label for="telefono1">Teléfono</label>
+          <input type="tel" name="telefono1" id="telefono1" required size="22">
+        </div>
+        <div class="form-group">
+          <label for="telefono2">Teléfono Opcional</label>
+          <input type="tel" name="telefono2" id="telefono2" size="22">
+        </div>
+      </div>
+
+      <!-- Fechas Importantes -->
+
+      <h2>beneficio <span> *</span></h2>
+      <h1> </h1>
+
+      <div class="form-row">
+        <div class="form-group-center">
+          <label for="fecha_inicio">Fecha Inicial</label>
+          <input type="date" name="fecha_inicio" id="fecha_inicio" required>
+        </div>
+        <div class="form-group-center">
+          <label for="fecha_final">Fecha Final</label>
+          <input type="date" name="fecha_final" id="fecha_final" required>
+        </div>
+        <div class="form-group-center">
+          <label for="t_beneficio">Tipo de beneficio</label>
+          <select name="t_beneficio" id="t_beneficio" required>
+            <option value="">Seleccione ...</option>
+            <option value="Rechazado">Rechazado</option>
+            <option value="beneficio 1">Beneficio 1</option>
+            <option value="beneficio 2">Beneficio 2</option>
+          </select>
+        </div>
+      </div>
+
+      <h1> </h1>
+      <h2>Estatus <span> *</span></h2>
+      <h1> </h1>
+
+      <div class="form-group ">
+        <select name="estatus" id="estatus" required>
+          <option value="">Seleccione ...</option>
+          <option value="Aceptado">Aceptado</option>
+          <option value="Rechazado">Rechazado</option>
+        </select>
+
+        <h1> </h1>
+        <h2>Observacion</h2>
+        <h1> </h1>
+
+        <textarea name="comentario" id="comentario" cols="105" rows="10"> </textarea>
+
+      </div>
+      <h1> </h1>
+
+      <div class="form-row">
+        &nbsp;
+        <button class="button" type='submit'>Registrar</button>
+        &nbsp;
+        <button class="button" type='reset'>Reiniciar</button>
+      </div>
+    </form>
+
+
+  </main>
+</div>
+
+{% endblock %}
