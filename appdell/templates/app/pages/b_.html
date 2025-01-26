@@ -1,0 +1,108 @@
+{% extends "app/base.html" %}
+{% load static %}
+
+{% block contenido %}
+<div class="wrapper row2 bgded" style="background-image:url('{% static 'images/demo/backgrounds/background.jpg' %}');">
+  <div class="overlay">
+    <section class="clear">
+
+      <div class="wrapper row4">
+        <section id="info" class="clear">
+          <div class="center btmspace-80">
+            <h2 class="heading uppercase btmspace-30">Resultados de Búsqueda</h2>
+          </div>
+          <style>
+
+          td {
+                      padding: 8px; /* Espaciado interno en celdas */
+                      text-align: center ; /* Alineación del texto */
+                      border: 1px solid #ddd; /* Bordes de las celdas */
+                      color: black; 
+                  }
+          th{
+                      padding: 8px; /* Espaciado interno en celdas */
+                      text-align: center ; /* Alineación del texto */
+                      border: 1px solid #ddd; /* Bordes de las celdas */
+                       
+                  }
+          
+          </style>
+
+
+
+          {% if mensaje %}
+          <p style="color: red;">{{ mensaje }}</p>
+          {% endif %}
+
+          <div class="group">
+            <div>
+              {% if cedulas %}
+                <h6>Usted ya cuenta con una solicitud activa, espere a ser contactado.</h6>
+                <!-- Tabla de Solicitudes -->
+                <h3>Solicitudes</h3>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Nombre</th>
+                      <th>Cédula</th>
+                      <th>Comentario</th>
+                      <th>Fecha de Creación</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for solicitud in cedulas %}
+                    <tr>
+                      <td>{{ solicitud.nombre }} {{ solicitud.apellido }}</td>
+                      <td>{{ solicitud.cedula }}</td>
+                      <td>{{ solicitud.comentario }}</td>
+                      <td>{{ solicitud.fecha_creacion }}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+
+                <!-- Tabla de Registros -->
+              
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Cédula</th>
+                      <th>Estatus</th>
+                      <th>Motivo</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for registro in registros %}
+                    {% for solicitud in cedulas %}
+                      {% if registro.cedula == solicitud.cedula %}
+                      <tr>
+                        <td>{{ registro.cedula }}</td>
+                        <td>{{ registro.estatus }}</td>
+                        <td>{{ registro.comentario }}</td>
+                      </tr>
+                      {% endif %}
+                    {% endfor %}
+                    {% endfor %}
+                  </tbody>
+                </table>
+
+              {% else %}
+                  
+                    <h6>Cédula no encontrada.</h6>
+                
+                    <footer><a href="{% url 'solicitudes_2' %}">Solicitar &raquo;</a></footer>
+                  
+              {% endif %}
+
+            </div>
+          </div>
+
+          <div class="clear"></div>
+        </section>
+      </div>
+
+    </section>
+  </div>
+</div>
+
+{% endblock %}
