@@ -1,17 +1,16 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import solicitud, Registro_becado
 from .forms import userForm, loginForm
 from django.contrib import messages
 from django.views import View
 from django.contrib.auth.views import LoginView
-from datetime import datetime, date
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-import pandas as pd
 from django.http import HttpResponse
 from django.http.response import JsonResponse
 from collections import defaultdict
-
+import pandas as pd
+from datetime import datetime, date
 def copy(request):
     return render(request, "app/pages/copy_cy.html")
 
@@ -147,8 +146,119 @@ def buscar(request):
     )
 
 
+
 def basic(request):
     return render(request, "app/pages/basic-grid.html")
+
+@login_required
+def delete_form(request):
+    return render(request,"app/pages/delete_form.html")
+
+# Vista para eliminar registros de Registro_becado
+@login_required
+def delete_form_registro(request):
+    if request.method == "GET":
+        cedula = request.GET.get("cedula")  # Obtener cédula del formulario
+        if cedula:
+            # Filtrar por cédula y eliminar el registro correspondiente
+            registro = Registro_becado.objects.filter(cedula=cedula)
+            if registro.exists():
+                registro.delete()
+                messages.success(request, "El registro asociado a esa cédula ha sido eliminado exitosamente.")
+            else:
+                messages.error(request, "No se encontró ningún registro asociado a esa cédula.")
+    return render(request, "app/pages/delete_form.html")
+
+# Vista para eliminar solicitudes
+@login_required
+def delete_form_solicitud(request):
+    if request.method == "GET":
+        cedula = request.GET.get("cedula")  # Obtener cédula del formulario
+        if cedula:
+            solicitudes = solicitud.objects.filter(cedula=cedula)
+            if solicitudes.exists():
+                solicitudes.delete()
+                messages.success(request, "Las solicitudes asociadas a esa cédula han sido eliminadas exitosamente.")
+            else:
+                messages.error(request, "No se encontró ninguna solicitud asociada a esa cédula.")
+    return render(request, "app/pages/delete_form.html")
+
+
+# Vista para modificar registros de Registro_becado
+@login_required
+def modify_form_registro(request):
+    if request.method == "GET":
+        cedula = request.GET.get("cedula")  # Obtener cédula del formulario
+        if cedula:
+            # Intentar obtener el registro correspondiente a la cédula
+            registro = Registro_becado.objects.filter(cedula=cedula).first()
+            if registro:
+                return render(request, 'app/pages/editar_registro.html', {'registro': registro})
+            else:
+                messages.error(request, "No se encontró ningún registro asociado a esa cédula.")
+                return redirect('delete_form')  # Redirige si no se encuentra el registro
+
+    messages.error(request, "Por favor ingrese una cédula válida.")
+    return redirect('delete_form')  # Redirige si no se proporciona cédula
+
+# Vista para actualizar el registro después de la modificación
+@login_required
+def update_registro(request, id):
+    registro_instance = get_object_or_404(Registro_becado, id=id)
+
+    if request.method == "POST":
+      
+        nombre = request.POST.get("nombre")
+        nombre2 = request.POST.get("nombre2")
+        apellido = request.POST.get("apellido")
+        apellido2 = request.POST.get("apellido2")
+        cedula = request.POST.get("cedula")
+        edad = request.POST.get("edad")
+        f_nacimiento = request.POST.get("f_nacimiento")
+        ubicacion = request.POST.get("ubicacion")
+        email = request.POST.get("email")
+        genero = request.POST.get("genero")
+        telefono1 = request.POST.get("telefono1")
+        telefono2 = request.POST.get("telefono2")
+        carrera = request.POST.get("carrera")
+        sede = request.POST.get("cede")
+        t_beneficio = request.POST.get("t_beneficio")
+        fecha_inicio = request.POST.get("fecha_inicio")
+        fecha_final = request.POST.get("fecha_final")
+        estatus = request.POST.get("estatus")
+        comentario = request.POST.get("comentario")
+        cursando = request.POST.get("cursando")
+
+        # Validar los datos (puedes agregar más validaciones según sea necesario)
+        if nombre and apellido :
+            # Actualizar el registro con los nuevos datos
+            registro_instance.nombre = nombre
+            registro_instance.nombre2= nombre2
+            registro_instance.apellido = apellido
+            registro_instance.apellido2 = apellido2
+            registro_instance.cedula = cedula
+            registro_instance.edad= edad
+            registro_instance.f_nacimiento = f_nacimiento
+            registro_instance.ubicacion = ubicacion
+            registro_instance.email = email
+            registro_instance.genero= genero
+            registro_instance.telefono1 = telefono1
+            registro_instance.telefono2 = telefono2
+            registro_instance.carrera = carrera
+            registro_instance.sede= sede
+            registro_instance.t_beneficio = t_beneficio
+            registro_instance.fecha_inicio = fecha_inicio
+            registro_instance.fecha_final = fecha_final
+            registro_instance.estatus = estatus
+            registro_instance.comentario = comentario
+            registro_instance.cursando = cursando
+            registro_instance.save()
+            
+            messages.success(request, "El registro ha sido actualizado exitosamente.")
+            return redirect('delete_form')  # Redirige después de guardar los cambios
+    
+    return render(request, 'app/pages/editar_registro.html', {'registro': registro_instance})
+
 
 
 # solo visible para administrador logueado
@@ -172,37 +282,23 @@ def get_chart(request):
 
         carrera_count[carrera][fecha] += 1  # Incrementar el contador
 
-    # Preparar los datos para el gráfico de líneas (nuevos)
-    fechas_lineas = sorted(set(fecha for fechas in carrera_count.values() for fecha in fechas))
-    
-    datasets_lineas = []
-    for carrera, fechas in carrera_count.items():
-        data = [fechas.get(fecha, 0) for fecha in fechas_lineas]
-        datasets_lineas.append({
-            'name': carrera,
-            'data': data,
-            'tooltip': {
-                'formatter': f'{carrera}: {{c}} en {{b}}',  # Tooltip para cada línea
-            }
-        })
-
     # Preparar datos para el gráfico circular (porcentaje de solicitudes por carrera)
-    total_por_carrera = {carrera: sum(fechas.values()) for carrera, fechas in carrera_count.items()}
-    
+    total_por_carrera = {
+        carrera: sum(fechas.values()) for carrera, fechas in carrera_count.items()
+    }
+
     pie_data_carreras = [
         {
             "value": count,
             "name": carrera,
-            "itemStyle": {'color': f'#{hash(carrera) % 0xFFFFFF:06x}'},  # Color único por carrera
+            "itemStyle": {"color": f"#{hash(carrera) % 0xFFFFFF:06x}"},
         }
         for carrera, count in total_por_carrera.items()
     ]
 
-
-
-    # Obtener datos de la tabla registros becados 
+    # Obtener datos de la tabla registros becados
     registros_becados = Registro_becado.objects.all()
-    
+
     # Agrupar estatus por fecha
     estatus_count = {"Aceptado": {}, "Rechazado": {}}
 
@@ -231,7 +327,7 @@ def get_chart(request):
     conteos_rechazados = [
         estatus_count["Rechazado"].get(fecha, 0) for fecha in fechas_becados
     ]
-    
+
     conteo_todos = [
         estatus_count["Aceptado"].get(fecha, 0)
         + estatus_count["Rechazado"].get(fecha, 0)
@@ -274,7 +370,7 @@ def get_chart(request):
     charts = {
         "chart1": {
             "title": {"text": "Conteo de Registros por Mes", "left": "center"},
-            "legend": {  
+            "legend": {
                 "data": ["Aceptados", "Rechazados", "Todos"],
                 "left": "left",
                 "orient": "vertical",
@@ -304,9 +400,7 @@ def get_chart(request):
                     "data": conteo_todos,
                     "type": "line",
                     "smooth": True,
-                    "itemStyle": {
-                        "color": "#0000FF"
-                    },
+                    "itemStyle": {"color": "#0000FF"},
                 },
             ],
             "tooltip_data": detalles_tooltip,
@@ -317,62 +411,58 @@ def get_chart(request):
                 "left": "center",
             },
             "legend": {"orient": "vertical", "left": "left"},
-            "tooltip": {"trigger": "item", 
-                        'formatter': '{a} <br/>{b}: {c} ({d}%)'},
-            'series': [
+            "tooltip": {"trigger": "item", "formatter": "{a} <br/>{b}: {c} ({d}%)"},
+            "series": [
                 {
-                    'name': 'Registros:',
-                    'type': 'pie',
-                    'radius': ['40%', '70%'],  
-                    'center': ['50%', '50%'],
-                    'data': pie_data,
-                    'emphasis': {
-                        'itemStyle': {
-                            'shadowBlur': 10,
-                            'shadowOffsetX': 0,
-                            'shadowColor': 'rgba(0, 0, 0, 0.5)',
+                    "name": "Registros:",
+                    "type": "pie",
+                    "radius": ["40%", "70%"],
+                    "center": ["50%", "50%"],
+                    "data": pie_data,
+                    "emphasis": {
+                        "itemStyle": {
+                            "shadowBlur": 10,
+                            "shadowOffsetX": 0,
+                            "shadowColor": "rgba(0, 0, 0, 0.5)",
                         }
                     },
                 }
             ],
-        },        
-         "chart3": {  
-             "title": {  
-                 "text": "Distribución Porcentual de Solicitudes por Carrera",  
-                 "left": "center",  
-             },  
-            "tooltip": {  
-                 "trigger": "item",  
-                 "formatter": "{a} <br/>{b}: {c} ({d}%)",  
-             },  
-             "legend": {  
-                 "orient": "vertical",  
-                 "left": "left",  
-                 "data": list(total_por_carrera.keys()),  
-             },  
-             "series": [  
-                 {  
-                     "name": "Carreras",  
-                     "type": "pie",  
-                     "radius": ["40%", "70%"],
-                     "center": ["50%", "50%"],  
-                     "data": pie_data_carreras,  
-                     "emphasis": {  
-                         "itemStyle": {  
-                             "shadowBlur": 10,  
-                             "shadowOffsetX": 0,   
-                             "shadowColor": "rgba(0, 0, 0, 0.5)",   
-                         }   
-                     },   
-                 }   
-             ],   
-         },   
+        },
+        "chart3": {
+            "title": {
+                "text": "Distribución Porcentual de Solicitudes por Carrera",
+                "left": "center",
+            },
+            "tooltip": {
+                "trigger": "item",
+                "formatter": "{a} <br/>{b}: {c} ({d}%)",
+            },
+            "legend": {
+                "orient": "vertical",
+                "left": "left",
+                "data": list(total_por_carrera.keys()),
+            },
+            "series": [
+                {
+                    "name": "Carreras",
+                    "type": "pie",
+                    "radius": ["40%", "70%"],
+                    "center": ["50%", "50%"],
+                    "data": pie_data_carreras,
+                    "emphasis": {
+                        "itemStyle": {
+                            "shadowBlur": 10,
+                            "shadowOffsetX": 0,
+                            "shadowColor": "rgba(0, 0, 0, 0.5)",
+                        }
+                    },
+                }
+            ],
+        },
     }
 
     return JsonResponse(charts)
-
-
-
 @login_required
 def full_solicitud(request):
     # Obtiene todos los registros inicialmente
@@ -454,8 +544,11 @@ def form_registro(request):
     if request.method == "POST":
         # Recoger datos del formulario
         nombre = request.POST.get("nombre")
+        nombre2 = request.POST.get("nombre2")
         apellido = request.POST.get("apellido")
+        apellido2 = request.POST.get("apellido2")
         cedula = request.POST.get("cedula")
+        edad = request.POST.get("edad")
         f_nacimiento = request.POST.get("f_nacimiento")
         ubicacion = request.POST.get("ubicacion")
         email = request.POST.get("email")
@@ -487,8 +580,11 @@ def form_registro(request):
             # Crear nueva solicitud
             nueva_solicitud = Registro_becado(
                 nombre=nombre,
+                nombre2=nombre2,
                 apellido=apellido,
+                apellido2=apellido2,
                 cedula=cedula,
+                edad=edad,
                 f_nacimiento=f_nacimiento,
                 ubicacion=ubicacion,
                 email=email,

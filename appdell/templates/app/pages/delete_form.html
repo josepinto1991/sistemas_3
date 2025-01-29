@@ -1,0 +1,141 @@
+
+{% extends "app/base.html" %}
+{% load static %}
+
+{% block titulo %}
+
+Registro
+
+{% endblock %}
+
+{% block contenido %}
+<div class="wrapper row2 bgded" style="background-image:url('{% static 'images/demo/backgrounds/background.jpg' %}');">
+  <div class="overlay">
+    <div id="breadcrumb" class="clear">
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Login</a></li>
+        <li><a href="#">Services</a></li>
+        <li><a href="#">Modificar o eliminar</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+<style>
+    .wrapper.row3 {
+      background-color: #f2f2f2;
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+
+      /* Espacio entre filas */
+    }
+
+    .form-group {
+      flex: 1;
+      /* Toma el mismo espacio */
+      justify-content: center;
+      /* Centra horizontalmente */
+      align-items: center;
+      /* Centra verticalmente */
+      min-width: 200px;
+      /* Ancho mínimo para cada columna */
+      margin-right: 5px;
+      /* Espacio entre columnas */
+    }
+
+    .form-group:last-child {
+      margin-right: 0;
+      /* Elimina el margen derecho en el último elemento */
+    }
+
+    /* Nueva clase para centrar elementos */
+    .form-group-center {
+      justify-content: center;
+      /* Centra horizontalmente */
+      align-items: center;
+      /* Centra verticalmente */
+      min-width: 200px;
+      /* Ancho mínimo para cada columna */
+      margin-right: 5px;
+      /* Espacio entre columnas */
+    }
+    .separar {
+      margin-right: 185px;
+    }
+    .button {
+      background: linear-gradient(140.14deg, #ec540e 15.05%, #d6361f 114.99%) padding-box,
+        linear-gradient(142.51deg, #ff9465 8.65%, #af1905 88.82%) border-box;
+      border-radius: 7px;
+      border: 2px solid transparent;
+
+      text-shadow: 1px 1px 1px #00000040;
+      box-shadow: 8px 8px 20px 0px #45090059;
+
+      padding: 10px 40px;
+      line-height: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+      color: white;
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .button:hover {
+      box-shadow: none;
+      opacity: 80%;
+    }
+
+    input, .date, select, textarea {
+            padding: 8px; /* Espaciado interno en celdas */
+            text-align: center; /* Alineación del texto */
+            border: 1px solid #ddd; /* Bordes de las celdas */
+          
+            text-shadow: 1px 1px 1px #00000040;
+            box-shadow: 8px 8px 20px 0px #45090059;
+      
+}
+  </style> 
+<div class="wrapper row3">
+    <main class="container clear">
+        <div class="wrapper row3"></div>
+            {% if messages %}
+            <h2 class="messages" style="color: red;">
+                {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </h2>
+            {% endif %}
+            
+            <div class="form-row"></div>
+                <!-- Formulario para eliminar registros de Registro_becado -->
+                <h3>Eliminar Registro Becado</h3>
+                <form action="{% url 'delete_form_registro' %}" method="get">
+                    <input type="number" name="cedula" placeholder="Ingrese Cédula" required>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button class="button" type="submit">Eliminar Registro</button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </form>
+                <!-- Formulario para eliminar solicitudes -->
+                <h3>Eliminar Solicitudes</h3>
+                <form action="{% url 'delete_form_solicitud' %}" method="get">
+                    <input type="number" name="cedula" placeholder="Ingrese Cédula" required>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button class="button" type="submit">Eliminar Solicitudes</button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </form>
+                <h3>Modificar Registro Becado</h3>
+                <form action="{% url 'modify_form_registro' %}" method="get">
+                    <input type="number" name="cedula" placeholder="Ingrese Cédula" required>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
+                    <button class="button" type="submit">Modificar Registro</button>
+                </form>
+            </div>
+        
+    </main>
+</div>
+{% endblock %}
+

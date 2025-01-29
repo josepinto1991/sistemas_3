@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
+from .models import Registro_becado
 
 class userForm(UserCreationForm):
   class Meta:
@@ -20,5 +21,3 @@ class loginForm(AuthenticationForm):
   # 1.- python -m pip install django_crispy_forms
   # 2.- archivo settings.py del proyecto, agregamos la app y variables
   # 3.- En la plantilla HTML pones los tags de cripy_forms
-
-

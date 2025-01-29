@@ -1,3 +1,4 @@
+
 {% extends "app/base.html" %}
 {% load static %}
 
@@ -15,7 +16,7 @@ Registro
         <li><a href="#">Home</a></li>
         <li><a href="#">Login</a></li>
         <li><a href="#">Services</a></li>
-        <li><a href="#">Registrar estudiantes</a></li>
+        <li><a href="#">Modificar Registro</a></li>
       </ul>
     </div>
   </div>
@@ -99,10 +100,23 @@ Registro
                       
             text-shadow: 1px 1px 1px #00000040;
             box-shadow: 8px 8px 20px 0px #45090059;
-        }
+                  }
     </style> 
-    <form action="{% url 'registrar' %}" method="post">
+<div class="wrapper row3">
+  <main class="container clear">
+    
+    <!-- Mostrar mensajes -->
+    {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <li class="{{ message.tags }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
 
+    <!-- Formulario de modificación -->
+    <form method="post" action="{% url 'update_registro' registro.id %}">
+    
       {% csrf_token %}
 
       <!-- Información personal -->
@@ -110,27 +124,27 @@ Registro
       <div class="form-row">
         <div class="form-group">
           <label for="nombre">Primer Nombres</label>
-          <input type="text" name="nombre" id="nombre" required size="22">
+          <input type="text" name="nombre" id="nombre" value="{{ registro.nombre }}" required size="22">
         </div>
         <div class="form-group">
           <label for="nombre2">Segundo Nombres</label>
-          <input type="text" name="nombre2" id="nombre2" required size="22">
+          <input type="text" name="nombre2" id="nombre2" value="{{ registro.nombre2 }}"required size="22">
         </div>
         <div class="form-group">
           <label for="apellido">Primer Apellidos</label>
-          <input type="text" name="apellido" id="apellido" required size="22">
+          <input type="text" name="apellido" id="apellido"value="{{ registro.apellido }}" required size="22">
         </div>
         <div class="form-group">
           <label for="apellido2">Segundo Apellidos</label>
-          <input type="text" name="apellido2" id="apellido2" required size="22">
+          <input type="text" name="apellido2" id="apellido2" value="{{ registro.apellido2 }}" required size="22">
         </div>
         <div class="form-group">
           <label for="cedula">Cédula</label>
-          <input type="text" name="cedula" id="cedula" required size="22">
+          <input type="text" name="cedula" id="cedula" value="{{ registro.cedula }}" required size="22">
         </div>
         <div class="form-group">
           <label for="edad">Edad</label>
-          <input type="text" name="edad" id="edad" required size="22">
+          <input type="text" name="edad" id="edad"  value="{{ registro.edad }}"  required size="22">
         </div>
         <div class="form-group">
           <label for="f_nacimiento">Fecha de nacimiento</label>
@@ -138,7 +152,7 @@ Registro
         </div>
         <div class="form-group">
           <label for="genero">Género</label>
-          <select name="genero" id="genero" class="form-control" required>
+          <select name="genero" id="genero" class="form-control"  required>
             <option value="">Seleccione...</option>
             <option value="masculino">Masculino</option>
             <option value="femenino">Femenino</option>
@@ -227,19 +241,19 @@ Registro
       <div class="form-row">
         <div class="form-group">
           <label for="ubicacion">Dirección</label>
-          <input type="text" name="ubicacion" id="ubicacion" required size="22">
+          <input type="text" name="ubicacion" id="ubicacion" value="{{ registro.ubicacion }}" required size="22">
         </div>
         <div class="form-group">
           <label for="email">Correo</label>
-          <input type="email" name="email" id="email" required size="22">
+          <input type="email" name="email" id="email" value="{{ registro.email }}" required size="22">
         </div>
         <div class="form-group">
           <label for="telefono1">Teléfono</label>
-          <input type="tel" name="telefono1" id="telefono1" required size="22">
+          <input type="tel" name="telefono1" id="telefono1" value="{{ registro.telefono1 }}" required size="22">
         </div>
         <div class="form-group">
           <label for="telefono2">Teléfono Opcional</label>
-          <input type="tel" name="telefono2" id="telefono2" size="22">
+          <input type="tel" name="telefono2" id="telefono2" value="{{ registro.telefono2 }}" size="22">
         </div>
       </div>
 
@@ -281,16 +295,16 @@ Registro
       </div>
       <h1> </h1>
 
-      <div class="form-row">
+    <div class="form-row">
         &nbsp;
-        <button class="button" type='submit'>Registrar</button>
+        
+    <button type="submit" class="button">Guardar Cambios</button>
         &nbsp;
-        <button class="button" type='reset'>Reiniciar</button>
+        
+        <a href="{% url 'delete_form' %}" class="button">Cancelar</a>
       </div>
     </form>
 
-
   </main>
 </div>
-
 {% endblock %}

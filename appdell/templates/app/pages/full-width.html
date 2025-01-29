@@ -14,7 +14,7 @@ Full Width
         <li><a href="#">Home</a></li>
         <li><a href="#">login</a></li>
         <li><a href="#">services</a></li>
-        <li><a href="#">busqueda</a></li>
+        <li><a href="#">registros</a></li>
       </ul>
     </div>
   </div>
@@ -39,13 +39,17 @@ Full Width
             border-collapse: collapse; /* Elimina los espacios entre celdas */
         }
     
-        th, td, select,input,button_link {
+        th, td, select,input, .button_link {
             padding: 8px; /* Espaciado interno en celdas */
             text-align: center; /* Alineación del texto */
             border: 1px solid #ddd; /* Bordes de las celdas */
             
         }
 
+        input, select {
+        text-shadow: 1px 1px 1px #00000040;
+        box-shadow: 8px 8px 20px 0px #45090059;
+        }
         .button_link {
             padding: 8px; /* Espaciado interno en celdas */
             text-align: center; /* Alineación del texto */
@@ -158,6 +162,7 @@ Full Width
                       <th>Apellido</th>
                       <th>Cedula</th>
                       <th>Email</th>
+                      <th>Edad</th>
                       <th>Fecha de nacimiento</th> 
                       <th>Fecha de registro</th>
                       <th>Ubicacion</th>
@@ -177,10 +182,11 @@ Full Width
               <tbody>
                   {% for registro in registros %}
                   <tr>
-                      <td>{{ registro.nombre }}</td> 
-                      <td>{{ registro.apellido }}</td>  
+                      <td>{{ registro.nombre }} {{ registro.nombre2 }}</td> 
+                      <td>{{ registro.apellido }} {{ registro.apellido2 }}</td>  
                       <td>{{ registro.cedula }}</td>    
                       <td>{{ registro.email }}</td>
+                      <td>{{ registro.edad }}</td>
                       <td>{{ registro.f_nacimiento }}</td> 
                       <td>{{ registro.fecha_creacion }}</td>
                       <td>{{ registro.ubicacion }}</td>  

@@ -36,32 +36,10 @@ const initCharts = async () => {
     const chart2 = echarts.init(document.getElementById('grafico2'));
     chart2.setOption(chartData.chart2);
 
-    // Inicializar el tercer gráfico (nuevo gráfico de líneas para solicitudes por fecha)
+    // Inicializar el tercer gráfico
     const chart3 = echarts.init(document.getElementById('grafico3'));
-
-    chartData.chart3.tooltip = {
-        trigger: 'axis', // Tooltip dinámico al pasar sobre un punto en el eje X
-        formatter: function(params) {
-            let tooltipContent = `<strong>${params[0].name}</strong><br/>`; // Fecha
-            params.forEach(param => {
-                tooltipContent += `${param.seriesName}: ${param.value}<br/>`; // Carrera y valor
-            });
-            return tooltipContent;
-        }
-    };
-
     chart3.setOption(chartData.chart3);
-
-    // Inicializar el cuarto gráfico (nuevo gráfico circular para porcentaje por carrera)
-    const chart4 = echarts.init(document.getElementById('grafico4'));
-
-    chartData.chart4.tooltip = {
-        trigger: 'item', // Tooltip dinámico al pasar sobre un segmento del gráfico circular
-        formatter: '{a} <br/>{b}: {c} ({d}%)' // Carrera, valor y porcentaje
     };
-
-    chart4.setOption(chartData.chart4);
-};
 
 window.addEventListener('load', async () => {
     await initCharts();

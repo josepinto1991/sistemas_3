@@ -29,9 +29,12 @@ class solicitud(models.Model):
 
 class Registro_becado(models.Model):
     nombre = models.CharField(max_length=100)
+    nombre2 = models.CharField(max_length=100, blank=True)
     apellido = models.CharField(max_length=100)
+    apellido2 = models.CharField(max_length=100, blank=True)
     cedula = models.CharField(max_length=10, unique=True)
     genero = models.CharField(max_length=10, choices=[('masculino', 'Masculino'), ('femenino', 'Femenino')], blank=True)
+    edad = models.IntegerField(blank=False, null=False)
     f_nacimiento = models.DateField()
     
     email = models.EmailField(max_length=150)

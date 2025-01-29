@@ -9,7 +9,7 @@
       <div class="wrapper row4">
         <section id="info" class="clear">
           <div class="center btmspace-80">
-            <h2 class="heading uppercase btmspace-30">Resultados de Búsqueda</h2>
+            <h2 class="heading uppercase btmspace-30" style="color: black">Resultados de Búsqueda</h2>
           </div>
           <style>
 
@@ -25,6 +25,7 @@
                       border: 1px solid #ddd; /* Bordes de las celdas */
                        
                   }
+        
           
           </style>
 
@@ -37,9 +38,9 @@
           <div class="group">
             <div>
               {% if cedulas %}
-                <h6>Usted ya cuenta con una solicitud activa, espere a ser contactado.</h6>
+                <h6 style="color: black">Usted ya cuenta con una solicitud activa, espere a ser contactado.</h6>
                 <!-- Tabla de Solicitudes -->
-                <h3>Solicitudes</h3>
+                <h3 style="color: black">Solicitudes</h3>
                 <table>
                   <thead>
                     <tr>
@@ -66,7 +67,6 @@
                 <table>
                   <thead>
                     <tr>
-                      <th>Cédula</th>
                       <th>Estatus</th>
                       <th>Motivo</th>
                     </tr>
@@ -76,7 +76,6 @@
                     {% for solicitud in cedulas %}
                       {% if registro.cedula == solicitud.cedula %}
                       <tr>
-                        <td>{{ registro.cedula }}</td>
                         <td>{{ registro.estatus }}</td>
                         <td>{{ registro.comentario }}</td>
                       </tr>
@@ -88,9 +87,9 @@
 
               {% else %}
                   
-                    <h6>Cédula no encontrada.</h6>
+                    <h6 style="color: black;">Cédula no encontrada.</h6>
                 
-                    <footer><a href="{% url 'solicitudes_2' %}">Solicitar &raquo;</a></footer>
+                    <footer><a href="{% url 'solicitudes_2' %}" style="color: #241508;">Solicitar &raquo;</a></footer>
                   
               {% endif %}
 
